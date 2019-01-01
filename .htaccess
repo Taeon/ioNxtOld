@@ -1,0 +1,22 @@
+# Turn on URL rewriting
+RewriteEngine On
+RewriteBase /
+
+# Remove trailing slash
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{HTTP_HOST} ^(.*)$ [NC]
+RewriteRule ^(.+)/$ http://%{HTTP_HOST}/$1 [R=301,L]
+
+# Check for HTML cache
+RewriteCond %{QUERY_STRING}     !ionxt-nocache= [NC]
+RewriteCond %{DOCUMENT_ROOT}/cache/HTML%{REQUEST_URI}/cache\.html -f
+RewriteRule ^(.*)$ %{DOCUMENT_ROOT}/cache/HTML/$1/cache.html [PT,L]
+
+# Do not enable rewriting for files or directories that exist
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME}/index.php !-f
+
+# For requests that are not actual files or directories,
+# Rewrite to index.php/URL
+# You might need to change the path here
+RewriteRule ^(.*)$ ioNxt/index.php/$1 [PT,L]
